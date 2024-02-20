@@ -5,6 +5,7 @@ import json
 from time import sleep # TODO: something else for precision
 import logging
 import logging.config
+from datetime import datetime
 
 with open('log_config.json','r') as f:
     logging_config = json.load(f)
@@ -93,25 +94,51 @@ params = {
 # no need if we get 10s right
 # https://stackoverflow.com/questions/3393612/run-certain-code-every-n-seconds
 # (TODO) Idea: check when the data changes to be with requests in the middle
+SECOND = 1
+HOUR = 3600 * SECOND
+
 FILE_NAME = "data/data.jsonl"
+# minimum interval after successful request (measure from the beginning to beginning)
+SUCC_INTERVAL = 10 * SECOND
+# minimum wait time after failed request (measure from the end to beginning)
+MIN_INTERVAL = 2 * SECOND
+
+def get_data_list():
+    """ Returns the list of vehicle positions from the API or None if unsuccessful."""
+    # maybe post with params in body is worth a try? nah # TODO cleanup
+    response = requests.get(url=POSITION_API_URL, params=params, timeout=5)
+    json_response = response.json()
+    return handle_json(json_response)
+
+def get_time() -> float:
+    return datetime.now().timestamp()
+
+# TODO: provided by user or something
+COLLECTION_TIME = 3*HOUR
+
+now = get_time()
+END = now + COLLECTION_TIME
+last_try = now - 2 * MIN_INTERVAL # long time ago
+
+logger.info("Starting to collect data for %d hours", COLLECTION_TIME/HOUR)
+
 with open(FILE_NAME, 'a') as file:
-    for i in range(3):
-        if i > 0:
-            sleep(10) # TODO: threading or scheduling + coordinate with retries
-            # TODO: 15s or what as in docs?
-        data_list: None = None # not the right type: make sure this screams and then fix
-        while data_list is None:
-            # TODO: handle failed timeout
-            # headers? Ideally (?), know if the data has changed
-            # maybe post with params in body is worth a try?
-            response = requests.get(url=POSITION_API_URL, params=params, timeout=5)
-            j_response = response.json()
-            data_list = handle_json(j_response)
-            if data_list is None: # while true for clean break before sleep?
-                sleep(1)
-        assert data_list is not None
-        dump(data_list, file)
-        logger.info("Dumped %d position records successfully", len(data_list))
+    while (now := get_time()) < END:
+        since_last_try = now - last_try
+        if since_last_try < MIN_INTERVAL:
+            sleep(MIN_INTERVAL - since_last_try)
+        before_req = get_time()
+        logger.info("Sending request to the API")
+        data_list = get_data_list()
+        last_try = get_time()
+        if data_list is not None:
+            # last_succ = before_req
+            dump(data_list, file)
+            logger.info("Dumped %d position records successfully", len(data_list))
+            since_last_succ = get_time() - before_req
+            # sleep after success that just happenned
+            if since_last_succ < SUCC_INTERVAL:
+                sleep(SUCC_INTERVAL - since_last_succ)
 
 
 ### ideas for analyzing data
