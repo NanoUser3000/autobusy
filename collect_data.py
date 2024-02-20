@@ -70,11 +70,13 @@ def dump(data_list: list, file) -> None:
     """ Dumps the data to a file as json lines.  """
     for data in data_list:
         file.write(json.dumps(data) + '\n')
+    return None
 
 config = dotenv_values(".env")
 API_KEY = config["API_KEY"]
 POSITION_API_URL = 'https://api.um.warszawa.pl/api/action/busestrams_get'
-POSITION_API_RESOURCE_ID = 'f2e5503e927d-4ad3-9500-4ab9e55deb59'
+POSITION_API_RESOURCE_ID = 'f2e5503e-927d-4ad3-9500-4ab9e55deb59'
+
 BUS_TYPE = 1
 TRAM_TYPE = 0
 
@@ -91,7 +93,7 @@ params = {
 # no need if we get 10s right
 # https://stackoverflow.com/questions/3393612/run-certain-code-every-n-seconds
 # (TODO) Idea: check when the data changes to be with requests in the middle
-FILE_NAME = "data.jsonl"
+FILE_NAME = "data/data.jsonl"
 with open(FILE_NAME, 'a') as file:
     for i in range(3):
         if i > 0:
@@ -106,7 +108,6 @@ with open(FILE_NAME, 'a') as file:
             j_response = response.json()
             data_list = handle_json(j_response)
             if data_list is None: # while true for clean break before sleep?
-                # print("Fail, retrying...")
                 sleep(1)
         assert data_list is not None
         dump(data_list, file)

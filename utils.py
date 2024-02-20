@@ -1,8 +1,10 @@
 from math import radians, cos, sin, asin, sqrt
 
+""" (Lon, Lat) """
+type Position = tuple[float, float]
+
 # TODO: tests
-# TODO: typehints
-def earth_distance_km(p1,p2):
+def earth_distance_km(p1: Position, p2: Position) -> float:
     """ Returns distance in kilometers between two points on Earth.
     The points should be given as pairs (lon, lat)"""
     # radius of Earth in kilometers (6357-6378km)
@@ -20,7 +22,7 @@ def earth_distance_km(p1,p2):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
     a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-    c = 2 * asin(sqrt(a))
+    c = 2 * asin(sqrt(a)) # @improve: check if a isn't > 1 by floating point error
     return (c * R)
 
 # TODO: tests
