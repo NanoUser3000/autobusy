@@ -122,6 +122,9 @@ last_try = now - 2 * MIN_INTERVAL # long time ago
 
 logger.info("Starting to collect data for %d hours", COLLECTION_TIME/HOUR)
 
+success_count = 0
+failure_count = 0
+
 with open(FILE_NAME, 'a') as file:
     while (now := get_time()) < END:
         since_last_try = now - last_try
@@ -139,6 +142,13 @@ with open(FILE_NAME, 'a') as file:
             # sleep after success that just happenned
             if since_last_succ < SUCC_INTERVAL:
                 sleep(SUCC_INTERVAL - since_last_succ)
+        if data_list is None:
+            failure_count += 1
+        else:
+            success_count += 1
+        if (success_count + failure_count) % 100 == 0:
+            logger.debug("Total of %d successful requests and %d failed requests so far",
+                        success_count, failure_count)
 
 
 ### ideas for analyzing data
