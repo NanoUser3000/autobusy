@@ -1,6 +1,7 @@
 # data # TODO? folder data/ or something like that
 *.json
 *.jsonl
+!log_config.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
