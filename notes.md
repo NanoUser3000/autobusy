@@ -1,6 +1,8 @@
-## For the developers
+## Notes for the developers
 
-### Notes about logging
+### collect
+
+#### Notes about logging
 
 _IMPORTANT_: **logging on level ERROR and above mandates
 that there is a `'details'` key in `extra`.**

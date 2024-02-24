@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "disable_existing_loggers": true,
+  "formatters": {
+    "simple": {
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z",
+      "format": "[%(asctime)s] %(levelname)s - %(message)s"
+    },
+    "detailed": {
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z",
+      "format": "[%(asctime)s] %(levelname)s - at %(filename)s:%(lineno)s (in function %(funcName)s) - %(message)s\n  DETAILS:\n%(details)s"
+    }
+  },
+  "handlers": {
+    "app": {
+      "level": "DEBUG",
+      "class": "logging.handlers.RotatingFileHandler",
+      "filename": "logs/app.log",
+      "formatter": "simple",
+      "maxBytes": 1000000,
+      "backupCount": 3
+    },
+    "errors": {
+      "level": "ERROR",
+      "class": "logging.handlers.RotatingFileHandler",
+      "filename": "logs/errors.log",
+      "formatter": "detailed",
+      "maxBytes": 1000000,
+      "backupCount": 3
+    }
+  },
+  "loggers": {
+    "root": { "level": "DEBUG", "handlers": ["app", "errors"] }
+  }
+}
