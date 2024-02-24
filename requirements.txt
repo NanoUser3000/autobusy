@@ -1,5 +1,5 @@
 # Editable Git install with no remote (analyze==0.0.1)
--e c:\users\user\documents\3 rok\pyton\autobusy\normal
+-e .
 asttokens==2.4.1
 attrs==23.2.0
 certifi==2024.2.2
