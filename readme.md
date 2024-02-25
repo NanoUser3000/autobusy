@@ -4,7 +4,7 @@ files of interest:
 - collect/script.py (note: unfortunately must be run from collect/)
 - preprocess collected data with analyze/preprocess.py,  
   -o analyze/pre_bigdata
-  (tak założone w analysis.ipynb)
+  (ten plik analizowany w analysis.ipynb)
 - analyze/donwloads/download.py (not needed though, downloads some stuff that wasn't put to use)
 
 note: need to add api_key in .env (create sibling to .env.example)
@@ -22,3 +22,5 @@ pip install -r requirements.txt
 ipython kernel install --user --name=autobusy
 
 (potem wybierz to do wykonania)
+
+after set up: in case of problems with python3, run everything using python, not python3 (sorry, not gonna fix it now)
