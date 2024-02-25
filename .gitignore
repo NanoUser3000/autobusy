@@ -1,7 +1,5 @@
 # data # TODO? folder data/ or something like that
 *.jsonl
-collect/logs/
-collect/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -16,7 +14,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-downloads/
+#downloads/ # TODO!!!
 eggs/
 .eggs/
 # lib/ # TODO!!!
